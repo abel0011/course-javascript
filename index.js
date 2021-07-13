@@ -9,17 +9,12 @@ document.addEventListener("DOMContentLoaded", () => {
   const btnadd = document.getElementById("add");
   const table = document.getElementById("table");
   const alert = document.getElementById("alert");
+  let id = 1;
 
-  //  btnadd.onclick = () => {
-  //    console.log(
-  //      "Title: ",
-  //      title.value,
-  //      "\n",
-  //      "Description: ",
-  //      description.value
-  //    );
-  //  };
-  //
+  function removeTodo(id) {
+    console.log(id);
+    document.getElementById(id).remove();
+  }
   function addTodo() {
     if (title.value === "" || description.value === "") {
       //removerla clase de bootstrap
@@ -30,6 +25,8 @@ document.addEventListener("DOMContentLoaded", () => {
       return;
     }
     const row = table.insertRow();
+    row.setAttribute("id", id++);
+
     row.innerHTML = `
     <td>${title.value}</td>
     <td>${description.value}</td>
@@ -40,13 +37,19 @@ document.addEventListener("DOMContentLoaded", () => {
       <button class="btn btn-primary mb-1">
             <i class="fa fa-pencil"></i>
       </button>
-          <button class="btn btn-danger mb-1 ml-1">
-            <i class="fa fa-trash"></i>
-        </button>
     </td>
-
     `;
-    alert.classList.add("d-none");
+    const removeBtn = document.createElement("button");
+    removeBtn.classList.add("btn", "btn-danger", "mb-1", "ml-1");
+    removeBtn.innerHTML = '<i class="fa fa-trash"></i>';
+    row.children[3].appendChild(removeBtn);
+
+    removeBtn.onclick = (e) => {
+      removeTodo(row.getAttribute("id"));
+    };
+
+    //imprime el evento y target identifica el tag html -- parentNode hace referencia al nodopadre del html
+    //removeBtn.onclick = (e) => console.log(e.target.parentNode);
   }
 
   btnadd.onclick = addTodo;
