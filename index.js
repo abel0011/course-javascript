@@ -8,6 +8,7 @@ document.addEventListener("DOMContentLoaded", () => {
   const description = document.getElementById("description");
   const btnadd = document.getElementById("add");
   const table = document.getElementById("table");
+  const alert = document.getElementById("alert");
 
   //  btnadd.onclick = () => {
   //    console.log(
@@ -21,16 +22,31 @@ document.addEventListener("DOMContentLoaded", () => {
   //
   function addTodo() {
     if (title.value === "" || description.value === "") {
+      //removerla clase de bootstrap
+      alert.classList.remove("d-none");
+      //sobre escribir la cadea de texto de alert
+      alert.innerText = "Title and Description are required";
       console.error("Title and Description are required");
-    } else {
-      console.log(
-        "El Titulo es => ",
-        title.value,
-        "\n",
-        "Description es =>",
-        description.value
-      );
+      return;
     }
+    const row = table.insertRow();
+    row.innerHTML = `
+    <td>${title.value}</td>
+    <td>${description.value}</td>
+    <td class="text-center">
+      <input type="checkbox" />
+    </td>
+    <td class="text-right">
+      <button class="btn btn-primary mb-1">
+            <i class="fa fa-pencil"></i>
+      </button>
+          <button class="btn btn-danger mb-1 ml-1">
+            <i class="fa fa-trash"></i>
+        </button>
+    </td>
+
+    `;
+    alert.classList.add("d-none");
   }
 
   btnadd.onclick = addTodo;
