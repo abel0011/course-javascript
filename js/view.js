@@ -1,5 +1,6 @@
 import AddTodo from "./components/add-todo.js";
 import Modal from "./components/modal.js";
+import Filters from "./components/filters.js";
 export default class view {
   constructor() {
     this.model = null;
@@ -10,10 +11,43 @@ export default class view {
     this.addTodoForm.onClick((title, description) =>
       this.addTodo(title, description)
     );
+    this.filters = new Filters();
+    this.filters.onClick((filters) => this.filter(filters));
   }
 
   setModel(model) {
     this.model = model;
+  }
+  filter(filters) {
+    //fitlers.word , filters.type
+    //se va realizar un destructuring
+    //const type = filter.type
+    const { type, words } = filters;
+    //no mostrar el primer elemento y expandir el resto
+    const [_, ...rows] = this.table.getElementsByTagName("tr");
+    for (const row of rows) {
+      //voy a quedarme con los 3 primeros elementos
+      //y los asignare a una variable
+      //remplazando const title =row[0]
+      const [title, description, completed] = row.children;
+      let shouldHide = false;
+      if (words) {
+        shouldHide =
+          !title.innerText.includes(words) &&
+          !description.innerText.includes(words);
+      }
+      const shouldBeCompleted = type === "completed";
+      const isCompleted = completed.children[0].checked;
+
+      if (type !== "all" && shouldBeCompleted !== isCompleted) {
+        shouldHide = true;
+      }
+      if (shouldHide) {
+        row.classList.add("d-none");
+      } else {
+        row.classList.remove("d-none");
+      }
+    }
   }
   editTodo(id, values) {
     this.model.editTodo(id, values);
@@ -68,7 +102,13 @@ export default class view {
     editBtn.setAttribute("data-toggle", "modal");
     //aquien va hacer el toggle
     editBtn.setAttribute("data-target", "#modal");
-    editBtn.onclick = () => this.modal.setValues(todo);
+    editBtn.onclick = () =>
+      this.modal.setValues({
+        id: todo.id,
+        title: row.children[0].innerText,
+        description: row.children[1].innerText,
+        completed: row.children[2].children[0].checked,
+      });
     row.children[3].appendChild(editBtn);
 
     const removeBtn = document.createElement("button");

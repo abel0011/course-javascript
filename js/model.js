@@ -25,7 +25,13 @@ export default class Model {
   }
 
   getTodos() {
-    return this.todos;
+    //  envio de la copia de los todos
+    //  const todos = [];
+    //  for (const todo of this.todos) {
+    //    todos.push(...todo);
+    //  }
+    //  return this.todos;
+    return this.todos.map((todo) => ({ ...todo }));
   }
   editTodo(id, values) {
     const index = this.findTodo(id);
